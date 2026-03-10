@@ -349,16 +349,18 @@ const ROOMS=[
 const DOORS=[
   {id:'d1',x:11,y:2,w:1,h:1,lock:null},  // cafe<->htop
   {id:'d2',x:13,y:2,w:1,h:1,lock:null},  // htop<->medbay
-  {id:'d3',x:8, y:6,w:1,h:1,lock:null},  // cafe<->hmid
-  {id:'d4',x:8, y:7,w:1,h:1,lock:null},  // hmid<->engine area
+  {id:'d3',x:8, y:5,w:1,h:2,lock:null},  // cafe<->hmid
+  {id:'d4',x:8, y:7,w:2,h:2,lock:null},  // hmid<->engine area
   {id:'d5',x:4, y:9,w:1,h:1,lock:null},  // storage<->weapons
-  {id:'d6',x:0, y:7,w:8,h:1,lock:null},  // cafe floor passthrough storage top
+  {id:'d6',x:0, y:7,w:8,h:2,lock:null},  // cafe floor passthrough storage top
   {id:'d7',x:10,y:9,w:1,h:1,lock:null},  // engine<->hmid
   {id:'d8',x:13,y:9,w:1,h:1,lock:null},  // engine<->security
-  {id:'d9',x:8, y:14,w:4,h:1,lock:null}, // hbot top
-  {id:'d10',x:9,y:16,w:2,h:1,lock:'both'}, // hbot<->command (LOCKED BOTH)
+  {id:'d9',x:7, y:14,w:5,h:1,lock:null}, // hbot top
+  {id:'d10',x:9,y:16,w:1,h:1,lock:'alpha'}, // hbot<->command (LOCKED BOTH)
   {id:'d11',x:15,y:12,w:1,h:1,lock:'alpha'}, // security<->command (LOCKED ALPHA)
-  {id:'d12',x:3, y:16,w:2,h:1,lock:'beta'},  // weapons<->command (LOCKED BETA)
+  // {id:'d12',x:3, y:16,w:2,h:1,lock:'beta'},  // weapons<->command (LOCKED BETA)
+  {id:'d13',x:15,y:11,w:1,h:1,lock:null},
+  {id:'d14',x:9,y:15,w:1,h:1,lock:null}
 ];
 
 // objects
@@ -366,10 +368,10 @@ const OBJS=[
   // NPCs
   {id:'cook',    x:2, y:2, type:'npc',col:'#ff9900',label:'COOK',     hint:'alpha',hIdx:0},
   {id:'medic',   x:15,y:2, type:'npc',col:'#00aaff',label:'MEDIC',    hint:'alpha',hIdx:1},
-  {id:'soldier', x:2, y:11,type:'npc',col:'#ff4444',label:'SOLDIER',  hint:'alpha',hIdx:2},
+  {id:'soldier', x:2, y:13,type:'npc',col:'#ff4444',label:'SOLDIER',  hint:'alpha',hIdx:2},
   {id:'engineer',x:17,y:10,type:'npc',col:'#44ff88',label:'ENGINEER', hint:'beta', hIdx:0},
   {id:'nav',     x:14,y:8, type:'npc',col:'#bb44ff',label:'NAVIGATOR',hint:'beta', hIdx:1},
-  {id:'captain', x:10,y:19,type:'npc',col:'#ffcc00',label:'CAPTAIN',  hint:'beta', hIdx:2},
+  {id:'captain', x:2,y:18,type:'npc',col:'#ffcc00',label:'CAPTAIN',  hint:'beta', hIdx:2},
   // Terminals (locked behind doors)
   {id:'term_a',  x:5, y:10,type:'terminal',label:'TERMINAL Α',tid:'alpha',col:'#00e5ff'},
   {id:'term_b',  x:16,y:9, type:'terminal',label:'TERMINAL Β',tid:'beta', col:'#ff6b00'},
@@ -381,8 +383,8 @@ const OBJS=[
   {id:'cr1',x:1, y:10,type:'prop',col:'#1a1a0a',w:2,h:2},
   {id:'cr2',x:5, y:12,type:'prop',col:'#1a1a0a',w:2,h:2},
   {id:'con1',x:14,y:7, type:'prop',col:'#12082a',w:4,h:1},
-  {id:'cmd_desk',x:2,y:17,type:'prop',col:'#0a1828',w:16,h:2},
-  {id:'cmd_chair',x:9,y:19,type:'prop',col:'#0d1c35',w:2,h:1},
+  {id:'cmd_desk',x:1,y:17,type:'prop',col:'#0a1828',w:1,h:4},
+  {id:'cmd_chair',x:3,y:18,type:'prop',col:'#0d1c35',w:1,h:2},
   {id:'gun_rack',x:1,y:10,type:'prop',col:'#200808',w:1,h:5},
 ];
 
@@ -396,7 +398,13 @@ function buildSolids(){
   DOORS.forEach(d=>{for(let tx=d.x;tx<d.x+d.w;tx++)for(let ty=d.y;ty<d.y+d.h;ty++)SOLID.delete(`${tx},${ty}`);});
   OBJS.filter(o=>o.type==='prop'||o.type==='terminal').forEach(o=>{
     const ow=o.w||1,oh=o.h||1;
-    for(let tx=o.x;tx<o.x+ow;tx++)for(let ty=o.y;ty<o.y+oh;ty++)SOLID.add(`${tx},${ty}`);
+    for(let tx=o.x; tx < o.x+ow; tx++){
+      for(let ty=o.y; ty<o.y+oh; ty++){
+        if(tx !== 8) {
+        SOLID.add(`${tx},${ty}`);
+        }
+      }
+    }
   });
 }
 
